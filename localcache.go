@@ -138,8 +138,8 @@ func (lc *LCache[K, V]) Del(key K) {
 	if !ok {
 		return
 	}
-	delete(lc.kvStore, key)
 	n.rmFlag = true
+	delete(lc.kvStore, key)
 
 	// 刷新缓存时间
 	lc.ch <- n
@@ -182,7 +182,6 @@ func (lc *LCache[K, V]) asyncJob() {
 			// 从尾部向前遍历
 			for n := lc.lruTail.prev; n != lc.lruHead; n = n.prev {
 				if now.After(n.expAt) {
-					fmt.Println(n.k, "expired")
 					// 将n从链表中摘除
 					n.prev.next = n.next
 					n.next.prev = n.prev
